@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Invoice</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+</head>
+<body class="bg-white font-sans">
+  <div class="max-w-4xl mx-auto border border-gray-300 mt-6">
+
+    <div class="bg-gray-700 text-white px-6 py-6 flex flex-col md:flex-row md:justify-between md:items-start">
+      <div class="text-lg font-normal leading-tight">
+     
+      </div>
+      <div class="text-right mt-4 md:mt-0 text-xs font-normal leading-tight">
+        <div class="font-semibold">Invoice</div>
+        <div class="font-normal">Tax invoice</div>
+        <div class="mt-2">+855(0)81-272-999</div>
+        <div>anxiety00v@gmail.com</div>
+      </div>
+    </div>
+
+    <div class="flex flex-col md:flex-row border-b border-gray-300 text-xs font-semibold text-gray-700 px-6 py-3">
+      <div class="flex-1 grid grid-cols-2 gap-x-6">
+        <div>
+          <div>INVOICE NO.<br/>REFERENCE</div>
+          <div class="font-normal mt-1" id="invoiceNumber">-</div>
+        </div>
+        <div>
+          <div>ISSUE DATE</div>
+          <div class="font-normal mt-1" id="invoiceDate">-</div>
+        </div>
+        <div>
+          <div>DUE DATE</div>
+          <div class="font-normal mt-1" id="invoiceDueDate">-</div>
+        </div>
+      </div>
+      <div class="md:w-48 mt-4 md:mt-0 text-right">
+        <div class="text-xs font-normal uppercase mb-1">Total due</div>
+        <div class="text-2xl font-bold" id="invoiceTotalAmount">$0.00</div>
+      </div>
+    </div>
+
+    <div class="flex flex-col md:flex-row border-b border-gray-300 px-6 py-4 text-xs text-gray-900">
+      <div class="flex-1">
+        <div class="font-bold uppercase mb-1">FROM</div>
+        <div class="font-semibold">anxiety</div>
+        <div></div>
+        <div>PhnomPenh</div>
+        <div>Cambodia</div>
+      </div>
+
+      <div class="flex-1 mt-6 md:mt-0">
+        <div class="font-bold uppercase mb-1">TO</div>
+        <div class="font-semibold" id="clientName">-</div>
+        <div id="clientAddress">-</div>
+        <div id="clientPhone" class="mt-1 text-sm text-gray-700"></div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-12 border-b border-gray-300 text-xs font-bold text-gray-900 px-6 py-2">
+      <div class="col-span-6">DESCRIPTION</div>
+      <div class="col-span-2 text-center">QUANTITY</div>
+      <div class="col-span-2 text-right">UNIT PRICE ($)</div>
+      <div class="col-span-2 text-right">AMOUNT ($)</div>
+    </div>
+
+    <div id="invoiceItems"></div>
+
+    <div class="px-6 py-3 text-xs text-gray-900">
+      <div class="flex justify-end space-x-12 font-semibold">
+        <div>Subtotal:</div>
+        <div id="invoiceSubtotal">$0.00</div>
+      </div>
+      <div class="flex justify-end space-x-12 font-semibold mt-1">
+        <div>Discount:</div>
+        <div id="invoiceDiscount">-$0.00</div>
+      </div>
+      <div class="flex justify-end space-x-12 font-semibold mt-1">
+        <div>Delivery:</div>
+        <div id="invoiceDelivery">$0.00</div>
+      </div>
+      <div class="flex justify-end space-x-12 font-bold mt-1 text-lg">
+        <div>Total:</div>
+        <div id="invoiceTotalFinal">$0.00</div>
+      </div>
+    </div>
+
+    <div class="flex flex-col md:flex-row px-6 py-6 min-h-[180px]">
+      <div class="flex-1 text-xs text-gray-900">
+        <div class="font-bold uppercase mb-2">TERMS & CONDITIONS</div>
+        <div class="mb-2">Payment is due within 15 days</div>
+        <a href="index.html" class="text-blue-600 mt-2 inline-block cursor-pointer">BACK TO PAGE</a>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const order = JSON.parse(localStorage.getItem("lastOrder"));
+
+    if (!order) {
+      document.body.innerHTML = "<div class='text-center text-red-600 font-semibold p-10'>No invoice data found.</div>";
+    } else {
+      const invoiceNumber = order.invoiceNumber || Math.floor(Math.random() * 1000000);
+      const today = new Date();
+      const dueDate = new Date(today);
+      dueDate.setDate(today.getDate() + 15);
+
+      document.getElementById("invoiceNumber").innerHTML = `${invoiceNumber}<br>${invoiceNumber}`;
+      document.getElementById("invoiceDate").textContent = today.toLocaleDateString();
+      document.getElementById("invoiceDueDate").textContent = dueDate.toLocaleDateString();
+
+      document.getElementById("clientName").textContent = `${order.firstName || ""} ${order.lastName || ""}`.trim() || "-";
+      document.getElementById("clientAddress").innerHTML = `
+        ${order.address || ""}<br>
+        ${order.city || ""} ${order.postalCode || ""}<br>
+        ${order.country || "Cambodia"}
+      `;
+      document.getElementById("clientPhone").textContent = order.phone || "-";
+
+      let itemsHTML = "";
+      let subtotal = 0;
+      const cart = Array.isArray(order.cart) ? order.cart : [];
+
+      cart.forEach(item => {
+        const price = Number(item.price) || 0;
+        const quantity = Number(item.quantity) || 0;
+        const itemTotal = price * quantity;
+        subtotal += itemTotal;
+
+        itemsHTML += `
+          <div class="grid grid-cols-12 border-b border-gray-300 text-xs text-gray-900 px-6 py-2">
+            <div class="col-span-6">${item.name || "-"} ${item.size ? `(Size: ${item.size})` : ""}</div>
+            <div class="col-span-2 text-center">${quantity}</div>
+            <div class="col-span-2 text-right">${price.toFixed(2)}</div>
+            <div class="col-span-2 text-right">${itemTotal.toFixed(2)}</div>
+          </div>
+        `;
+      });
+
+      const discount = Number(order.discountAmount) || 0;
+      const shippingMethod = order.shippingMethod || "";
+      const shipping = shippingMethod.toLowerCase().includes("free") ? 0 : 1.5;
+
+      const total = Number(order.total) || (subtotal + shipping - discount);
+
+      document.getElementById("invoiceItems").innerHTML = itemsHTML || `<div class="px-6 py-4 text-center text-gray-500">No items found</div>`;
+      document.getElementById("invoiceSubtotal").textContent = `$${subtotal.toFixed(2)}`;
+      document.getElementById("invoiceDiscount").textContent = `-$${discount.toFixed(2)}`;
+      document.getElementById("invoiceDelivery").textContent = `$${shipping.toFixed(2)}`;
+      document.getElementById("invoiceTotalFinal").textContent = `$${total.toFixed(2)}`;
+      document.getElementById("invoiceTotalAmount").textContent = `$${total.toFixed(2)}`;
+    }
+  </script>
+</body>
+</html>

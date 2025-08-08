@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Product Page</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+    body { font-family: 'Roboto Mono', monospace; }
+  </style>
+</head>
+<body class="bg-white text-black">
+
+ 
+<header class="flex justify-between items-center px-6 py-4 shadow sticky top-0 z-50 bg-white">
+  <button class="text-sm" onclick="window.location.href='index.html'">HOME</button>
+  <div class="text-2xl font-bold tracking-tight">
+    <span class="relative">
+      anxiety
+      <span class="block w-3 h-3 rounded-full bg-sky-400 absolute -top-1 -right-3"></span>
+    </span>
+ 
+   </div>
+ 
+  <div class="mt-4 md:mt-0">
+    <button id="basketToggleBtn" class="text-sm font-bold text-black hover:text-sky-500 transition">
+      CART (<span id="cartCount">0</span>)
+    </button>
+  </div>
+</header>
+
+
+ 
+<main class="max-w-6xl mx-auto px-6 py-10 flex flex-col md:flex-row gap-10">
+ 
+  <section class="flex-1 flex justify-center items-start">
+    <img
+      id="mainImage"
+      src="https://scontent.fpnh2-2.fna.fbcdn.net/v/t39.30808-6/529137162_791495783457036_7109327969425895424_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeG3H5A97wQpmJzzmb7Nt1v2QmBi19tZVqpCYGLX21lWqqJU2IKnKbKdcMoxgg2osnJVKJqsFfO9Hy-z8f2qUnJO&_nc_ohc=-Fz3TreXqzkQ7kNvwH5VeJD&_nc_oc=AdmmQuwoM6F5tIrpA3aHW1qsmMpQSRy_K0tBbk6uSmhX4AOFwZZysVxldfcIIyH3Otc&_nc_zt=23&_nc_ht=scontent.fpnh2-2.fna&_nc_gid=SzjMEo1WN1rVdd6TipXz1A&oh=00_AfXxl1AHwkKng3GUABFWT0Ml0FhWxFI4aBbGiBl5hoFW3w&oe=689A9374"
+      alt="Product"
+      class="rounded-md w-full max-w-[500px] object-cover"
+    />
+  </section>
+
+ 
+  <section class="flex-1 max-w-md space-y-4">
+    <h1 class="text-xl font-semibold">DONT THAI TO THE WORLD TEE 00</h1>
+
+    <style>
+      .size-btn.selected {
+        background-color: black;
+        color: white;
+        border-color: black;
+      }
+    </style>
+
+    <div class="space-y-2">
+      <label class="text-sm font-medium block">Select Size</label>
+      <div id="sizeOptions" class="flex gap-3 overflow-x-auto pb-2">
+        <button class="size-btn px-4 py-2 border rounded-md text-sm" data-size="S">S</button>
+        <button class="size-btn px-4 py-2 border rounded-md text-sm" data-size="M">M</button>
+        <button class="size-btn px-4 py-2 border rounded-md text-sm" data-size="L">L</button>
+      </div>
+    </div>
+
+    <p class="text-lg font-medium">$20.00</p>
+
+    <div class="flex gap-4">
+      <button id="addToCartBtn" class="bg-black text-white px-6 py-2 rounded text-sm">Add to cart</button>
+      <a href="index.html" class="bg-gray-200 text-black px-6 py-2 rounded text-sm">&lt; All items</a>
+    </div>
+    <div id="cartMessage" class="text-green-600 hidden">Added to cart!</div>
+
+    <div class="mt-10">
+      <h2 class="text-xl font-bold mb-2 border-b pb-1">Product Details</h2>
+
+      <div class="mb-4">
+        <h3 class="font-semibold">Exterior</h3>
+        <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+          <li>DONT THAI TO THE WORLD TEE 00 - anxiety</li>
+          <li>Limited Stock</li>
+          <li>$20</li>
+          <li>Black color way</li>
+          <li>270 gsm</li>
+          <li>Boxy fit, true to size</li>
+          <li>100% cotton</li>
+          <li>Hand screen-printed</li>
+          <li>Custom woven neck tag</li>
+          <li>Custom box packaging</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+ 
+<div id="basketWrapper" class="fixed top-0 right-0 w-full md:w-[400px] h-full bg-white shadow-lg z-50 p-6 hidden">
+   <button id="closeBasketBtn" class="mb-4 text-black font-bold hover:text-red-500">Close</button>
+  <div id="basketItems" class="overflow-y-auto max-h-[60vh]"></div>
+  <div id="totalPrice" class="mt-4 font-bold text-lg">Total: $0.00</div>
+  <div class="mt-4 flex gap-4">
+    <button id="checkoutBtn" class="bg-black text-white px-4 py-2 rounded">Checkout</button>
+    <button id="continueBtn" class="border border-black px-4 py-2 rounded">Continue Shopping</button>
+  </div>
+</div>
+
+ 
+<div class="max-w-7xl mx-auto px-4 py-12">
+  <div class="flex flex-col md:flex-row items-center justify-center gap-6">
+ 
+    <button aria-label="Previous" class="text-black text-2xl">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+
+    
+ <div class="flex gap-6 overflow-x-auto md:overflow-visible">
+  <a href="indexdesirt.html" target="_blank" rel="noopener noreferrer">
+    <img
+      alt="Blue and white boxing shorts"
+      class="w-[300px] md:w-[400px] h-auto object-contain rounded"
+      src="https://scontent.fpnh2-1.fna.fbcdn.net/v/t39.30808-6/528077863_790720606867887_7460051732380858359_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeGCe3E6CrAb7gDy2nYbflbcwwocFGYV1bDDChwUZhXVsF9RaCO2SsnYHnFqLmcNzgtNtAp_Mmr0BYmnrmKMQyww&_nc_ohc=CfWFlWNA7qoQ7kNvwEoetxB&_nc_oc=AdmP4QYMdmf52d8Jj_NyyWZ7gcjrMGqZAq5K__2a6z1Xk0EMeKJ07JLggz_EaXBxSDU&_nc_zt=23&_nc_ht=scontent.fpnh2-1.fna&_nc_gid=tCLzanWx_NKhdXRiNQA7bw&oh=00_AfV7ltEixx7W8LJMXK5_wBKjJAkUBTsSGPsO2NTlLgwO_w&oe=689A7E61"
+    />
+  </a>
+
+  <a href="indexthai.html" target="_blank" rel="noopener noreferrer">
+    <img
+      alt="Black and white boxing shorts"
+      class="w-[300px] md:w-[400px] h-auto object-contain rounded"
+      src="https://scontent.fpnh2-3.fna.fbcdn.net/v/t39.30808-6/527843430_791495786790369_5884379683887694367_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeEeeTo0BHOzoyEGD0xNVFJj-NH3D-HYRdf40fcP4dhF13WplEXRK-IchnrxVKUy_BeQQcLcXnI4z-NYtzpehD2r&_nc_ohc=yJu50SMUNgsQ7kNvwF4HriT&_nc_oc=AdmzyCpJYc4Pn7wcaXBveh_le6EDD7nzyln8oCzRGB9H6Ppyp8Nxk0qF9uCmzZqy54g&_nc_zt=23&_nc_ht=scontent.fpnh2-3.fna&_nc_gid=vvTuZeh1yNdfprQixlI13w&oh=00_AfVhJyyCy10l9qD9LgWPnRhlFAvfiD5qObOCcxRuqaZmjA&oe=689A7153"
+    />
+  </a>
+</div>
+
+
+ 
+    <button aria-label="Next" class="text-black text-2xl">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+  </div>
+</div>
+
+
+
+
+ <footer class="bg-gray-900 text-white mt-20 py-12 px-10">
+  <div class="grid md:grid-cols-4 gap-8">
+    <div>
+      <h4 class="font-bold uppercase mb-4 text-sm">Main Menu</h4>
+      <a href="index.html" class="block hover:underline text-sm">New Arrivals</a>
+    </div>
+    <div>
+      <h4 class="font-bold uppercase mb-4 text-sm">Company</h4>
+      <a href="https://maps.app.goo.gl/cdCSoGT7r8hWgMM26?g_st=ipc" class="block hover:underline text-sm">Address</a>
+       <a href="indexinvoice.html" class="block hover:underline text-sm">Invoice</a>
+    </div>
+    <div>
+      <h4 class="font-bold uppercase mb-4 text-sm">Social</h4>
+      <a href="https://www.facebook.com/share/16gtCeKsai" class="block hover:underline text-sm">Facebook</a>
+      <a href="https://www.instagram.com/anxiety00_v" class="block hover:underline text-sm">Instagram</a>
+      <a href="https://www.tiktok.com/@00an_xie_ty" class="block hover:underline text-sm">Tiktok</a>
+    </div>
+    <div>
+      <h4 class="font-bold uppercase mb-4 text-sm">Newsletter</h4>
+      <p class="text-sm mb-3">First access to NEW DROPS.</p>
+      <form id="newsletterForm" class="flex space-x-2">
+        <input type="email" name="email" placeholder="your-email@example.com" required
+          class="px-4 py-2 rounded-md bg-gray-800 border border-gray-700 placeholder-gray-400 focus:outline-none" />
+        <button type="submit" class="bg-sky-500 px-4 py-2 rounded-md font-semibold hover:bg-sky-600">Join</button>
+      </form>
+    </div>
+  </div>
+  <p class="text-center text-xs text-gray-500 mt-10">© anxiety® 2025</p>
+</footer>
+<script>
+(() => {
+  const PRODUCT_NAME = "DONT THAI TO THE WORLD TEE 00";
+  const PRODUCT_PRICE = 20.00;
+  const mainImage = document.getElementById('mainImage');
+  const basketWrapper = document.getElementById('basketWrapper');
+  const basketToggleBtn = document.getElementById('basketToggleBtn');
+  const closeBasketBtn = document.getElementById('closeBasketBtn');
+  const addToCartBtn = document.getElementById('addToCartBtn');
+  const checkoutBtn = document.getElementById('checkoutBtn');
+  const continueBtn = document.getElementById('continueBtn');
+  const basketItemsContainer = document.getElementById('basketItems');
+  const totalPriceElem = document.getElementById('totalPrice');
+  const cartCountElem = document.getElementById('cartCount');
+  const cartMessage = document.getElementById('cartMessage');
+
+   let selectedSize = "";
+
+  document.querySelectorAll('.size-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedSize = btn.dataset.size;
+    });
+  });
+
+  function safeParseJSON(json) {
+    try {
+      return JSON.parse(json);
+    } catch {
+      return null;
+    }
+  }
+
+  function updateCartCount() {
+    const cart = safeParseJSON(localStorage.getItem('basket')) || [];
+    const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+    cartCountElem.textContent = count;
+  }
+
+  function displayBasket() {
+    const cart = safeParseJSON(localStorage.getItem('basket')) || [];
+    basketItemsContainer.innerHTML = '';
+    let total = 0;
+
+    if (cart.length === 0) {
+      basketItemsContainer.innerHTML = '<p class="text-gray-500">Your cart is empty.</p>';
+      totalPriceElem.textContent = 'Total: $0.00';
+      return;
+    }
+
+    cart.forEach((item, index) => {
+      const itemDiv = document.createElement('div');
+      itemDiv.className = 'mb-4 flex items-center gap-4';
+      itemDiv.innerHTML = `
+        <img src="${item.img}" alt="${item.name}" class="w-16 h-16 object-cover rounded">
+        <div class="flex-1">
+          <div class="font-bold">${item.name}</div>
+          <div class="text-sm text-gray-500">Size: ${item.size}</div>
+          <div class="flex gap-2 mt-1 items-center">
+            <button data-index="${index}" data-action="decrease" class="px-2 border">-</button>
+            <span>${item.quantity}</span>
+            <button data-index="${index}" data-action="increase" class="px-2 border">+</button>
+          </div>
+        </div>
+        <div>$${(item.price * item.quantity).toFixed(2)}</div>`;
+      basketItemsContainer.appendChild(itemDiv);
+      total += item.price * item.quantity;
+    });
+
+    totalPriceElem.textContent = `Total: $${total.toFixed(2)}`;
+  }
+
+  function updateQuantity(index, action) {
+    const cart = safeParseJSON(localStorage.getItem('basket')) || [];
+    if (!cart[index]) return;
+    if (action === 'increase') cart[index].quantity++;
+    if (action === 'decrease') {
+      cart[index].quantity--;
+      if (cart[index].quantity <= 0) cart.splice(index, 1);
+    }
+    localStorage.setItem('basket', JSON.stringify(cart));
+    displayBasket();
+    updateCartCount();
+  }
+
+  function addToCart() {
+    const img = mainImage.src;
+
+    if (!selectedSize) {
+      alert('Please select a size before adding to cart.');
+      return;
+    }
+
+    let cart = safeParseJSON(localStorage.getItem('basket')) || [];
+    const existingIndex = cart.findIndex(i => i.name === PRODUCT_NAME && i.size === selectedSize);
+
+    if (existingIndex !== -1) {
+      cart[existingIndex].quantity++;
+    } else {
+      cart.push({ name: PRODUCT_NAME, price: PRODUCT_PRICE, img, size: selectedSize, quantity: 1 });
+    }
+
+    localStorage.setItem('basket', JSON.stringify(cart));
+    updateCartCount();
+    cartMessage.classList.remove('hidden');
+    setTimeout(() => cartMessage.classList.add('hidden'), 2000);
+  }
+
+ 
+  basketToggleBtn.onclick = () => {
+    basketWrapper.classList.toggle('hidden');
+    if (!basketWrapper.classList.contains('hidden')) displayBasket();
+  };
+
+  closeBasketBtn.onclick = () => basketWrapper.classList.add('hidden');
+
+  addToCartBtn.onclick = addToCart;
+
+  
+  checkoutBtn.onclick = () => {
+    window.location.href = 'indexcart.html';
+  };
+
+ 
+  continueBtn.onclick = () => {
+    window.location.href = 'indexcontinue.html';
+  };
+
+  basketItemsContainer.onclick = (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    const index = parseInt(btn.dataset.index);
+    const action = btn.dataset.action;
+    if (!isNaN(index) && action) updateQuantity(index, action);
+  };
+
+  updateCartCount();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+  <title>Checkout Page</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+    body { font-family: 'Roboto Mono', monospace; }
+    .shipping-option.selected {
+      border-color: #000000;
+      background-color: #f3f4f6;
+    }
+  </style>
+</head>
+<body class="bg-white text-black">
+  <div class="min-h-screen flex flex-col md:flex-row max-w-7xl mx-auto">
+  
+    <form id="checkout-form" class="flex-1 p-8 md:border-r border-gray-200" novalidate>
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="font-extrabold text-lg leading-6">Contact</h2>
+      </div>
+
+      <input id="gmail" name="email" class="w-full mb-10 px-4 py-3 border border-gray-300 rounded-lg" placeholder="Email or mobile phone number" type="email" required />
+
+      <h3 class="font-extrabold text-lg leading-6 mb-4">Delivery</h3>
+
+      <div class="mb-4">
+        <label class="block text-xs text-gray-400 mb-1" for="country">Country/Region</label>
+        <input type="text" id="country" value="Cambodia" readonly class="w-full border border-gray-300 rounded-lg px-4 py-3 text-black font-semibold cursor-not-allowed bg-gray-100" />
+      </div>
+
+      <div class="flex gap-4 mb-4">
+        <input id="first-name" name="firstName" class="flex-1 border border-gray-300 rounded-lg px-4 py-3" placeholder="First name (optional)" type="text" pattern="^[A-Za-z]{1,15}$" maxlength="15" />
+        <input id="last-name" name="lastName" class="flex-1 border border-gray-300 rounded-lg px-4 py-3" placeholder="Last name" type="text" required pattern="^[A-Za-z]{1,15}$" maxlength="15" />
+      </div>
+
+      <input id="address" name="address" class="w-full mb-4 px-4 py-3 border border-gray-300 rounded-lg" placeholder="Address" type="text" required />
+
+      <div class="flex gap-4 mb-4">
+        <input id="city" name="city" class="flex-1 border border-gray-300 rounded-lg px-4 py-3" placeholder="City" type="text" required />
+        <input id="postal-code" name="postalCode" class="flex-1 border border-gray-300 rounded-lg px-4 py-3" placeholder="Postal code (optional)" type="text" />
+      </div>
+
+      <div class="relative mb-6">
+        <input id="phone" name="phone" class="w-full px-4 py-3 border border-gray-300 rounded-lg" placeholder="Phone" type="tel" required pattern="^[0-9]{7,15}$" maxlength="15" />
+        <div class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer">
+          <i class="fas fa-question-circle"></i>
+        </div>
+      </div>
+
+      <label class="inline-flex items-center mb-8 cursor-pointer">
+        <input class="form-checkbox border border-gray-300 rounded-sm text-black" type="checkbox" id="save-info" name="saveInfo" />
+        <span class="ml-2 text-sm text-black">Save this information for next time</span>
+      </label>
+
+      <h3 class="font-extrabold text-lg leading-6 mb-3">Shipping method</h3>
+      <div id="shipping-form" class="mb-6">
+        <button type="button" class="w-full border border-gray-600 rounded-lg px-6 py-4 flex justify-between items-center font-semibold text-black hover:bg-gray-100 mb-3 shipping-option selected" data-price="0">
+          <div class="flex flex-col">
+            <span>Delivery</span>
+            <small class="text-xs text-gray-500">Only Phnom Penh</small>
+          </div>
+          <span>FREE</span>
+        </button>
+
+        <button type="button" class="w-full border border-gray-600 rounded-lg px-6 py-4 flex justify-between items-center font-semibold text-black hover:bg-gray-100 shipping-option" data-price="1.5">
+          <div class="flex items-center space-x-3">
+            <img src="https://mma.prnewswire.com/media/1721319/JT_Express_Logo.jpg?p=facebook" alt="J&T Express" class="h-6" />
+            <span>J&T Express</span>
+            <small class="text-xs text-gray-500">2-4 Days</small>
+          </div>
+          <span>6000r</span>
+        </button>
+      </div>
+    </form>
+
+    <!-- Checkout Summary -->
+    <aside class="flex-1 bg-gray-100 p-8 flex flex-col">
+      <div id="checkoutCartItems" class="flex-grow overflow-y-auto mb-6"></div>
+
+      <div class="flex gap-2 mb-6">
+        <input id="discount-code" class="flex-1 rounded-lg border border-gray-300 px-4 py-3" placeholder="Discount code" type="text" />
+        <button class="bg-gray-300 rounded-lg px-5 py-3 text-gray-600 hover:bg-gray-400" onclick="applyDiscount()">Apply</button>
+      </div>
+
+      <div class="flex justify-between mb-2 text-sm">
+        <span>Subtotal</span>
+        <span id="checkoutSubtotalPrice">USD $0.00</span>
+      </div>
+      <div class="flex justify-between mb-6 text-sm">
+        <span>Shipping <i class="fas fa-question-circle text-gray-600 ml-1"></i></span>
+        <span id="checkoutShippingPrice">Free</span>
+      </div>
+      <div class="flex justify-between text-xl font-extrabold mb-6">
+        <span>Total <span class="text-xs font-normal ml-1">USD</span></span>
+        <span id="checkoutTotalPrice">USD $0.00</span>
+      </div>
+
+      <button id="payNowButton" type="button" class="w-full bg-black text-white font-bold py-4 rounded-lg hover:bg-gray-800 disabled:opacity-50" onclick="submitOrder()" disabled>
+        Pay now
+      </button>
+    </aside>
+  </div>
+
+ 
+  <script>
+    let cart = JSON.parse(localStorage.getItem("basket")) || [];
+    let discountAmount = 0;
+    let discountCodeUsed = false;
+    let selectedShippingPrice = 0;
+
+    function renderCheckoutItems() {
+      const container = document.getElementById("checkoutCartItems");
+      const subtotalElem = document.getElementById("checkoutSubtotalPrice");
+      const shippingElem = document.getElementById("checkoutShippingPrice");
+      const totalElem = document.getElementById("checkoutTotalPrice");
+      const payBtn = document.getElementById("payNowButton");
+
+      container.innerHTML = "";
+
+      if (cart.length === 0) {
+        container.innerHTML = `<p>Your basket is empty. <a href="index.html" class="text-blue-600 underline">Go back to shopping</a></p>`;
+        subtotalElem.textContent = "USD $0.00";
+        shippingElem.textContent = "Free";
+        totalElem.textContent = "USD $0.00";
+        payBtn.disabled = true;
+        return;
+      }
+
+      payBtn.disabled = false;
+      let subtotal = 0;
+
+      cart.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        subtotal += itemTotal;
+
+        const div = document.createElement("div");
+        div.className = "item mb-4 flex gap-4 items-center";
+        div.innerHTML = `
+          <img src="${item.img}" alt="${item.name}" class="w-20 h-20 object-cover rounded" />
+          <div class="item-details flex flex-col gap-1">
+            <p class="font-semibold">${item.name}</p>
+            ${item.size ? `<p class="text-gray-500 text-sm">Size: ${item.size}</p>` : ""}
+            <p class="text-gray-800 text-sm">Price: $${item.price.toFixed(2)}</p>
+            <p class="text-gray-800 text-sm">Quantity: ${item.quantity}</p>
+            <p class="text-black font-semibold text-sm">Subtotal: $${itemTotal.toFixed(2)}</p>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+
+      const total = subtotal + selectedShippingPrice - discountAmount;
+      subtotalElem.textContent = `USD $${subtotal.toFixed(2)}`;
+      shippingElem.textContent = selectedShippingPrice === 0 ? "Free" : `USD $${selectedShippingPrice.toFixed(2)}`;
+      totalElem.textContent = `USD $${total.toFixed(2)}`;
+    }
+
+    function applyDiscount() {
+      const codeInput = document.getElementById("discount-code");
+      const code = codeInput.value.trim().toUpperCase();
+      if (code === "SALE10" && !discountCodeUsed) {
+        discountAmount = 1;
+        discountCodeUsed = true;
+        renderCheckoutItems();
+        alert("Discount code applied!");
+      } else {
+        alert("Invalid or already used discount code.");
+      }
+    }
+
+    function submitOrder() {
+      const form = document.getElementById("checkout-form");
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      const order = {
+        email: document.getElementById("gmail").value,
+        firstName: document.getElementById("first-name").value,
+        lastName: document.getElementById("last-name").value,
+        address: document.getElementById("address").value,
+        city: document.getElementById("city").value,
+        postalCode: document.getElementById("postal-code").value,
+        phone: document.getElementById("phone").value,
+        shippingMethod: selectedShippingPrice,
+        cart,
+        discountAmount,
+        total: cart.reduce((sum, item) => sum + item.price * item.quantity, 0) + selectedShippingPrice - discountAmount,
+      };
+
+      console.log("Order submitted:", order);
+      alert("Thank you for your order!");
+      localStorage.removeItem("basket");
+      window.location.href = "index.html";
+    }
+
+   document.addEventListener('DOMContentLoaded', () => {
+  const buyNowButton = document.querySelector('a[href="all-items.html"]');
+  if (buyNowButton) {
+    buyNowButton.textContent = 'Buy it now';
+  }
+});
+
+    document.querySelectorAll(".shipping-option").forEach(button => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll(".shipping-option").forEach(btn => btn.classList.remove("selected"));
+        button.classList.add("selected");
+        selectedShippingPrice = parseFloat(button.dataset.price) || 0;
+        renderCheckoutItems();
+      });
+    });
+function submitOrder() {
+  const form = document.getElementById("checkout-form");
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
+
+  const order = {
+    email: document.getElementById("gmail").value,
+    firstName: document.getElementById("first-name").value,
+    lastName: document.getElementById("last-name").value,
+    address: document.getElementById("address").value,
+    city: document.getElementById("city").value,
+    postalCode: document.getElementById("postal-code").value,
+    phone: document.getElementById("phone").value,
+    shippingMethod: selectedShippingPrice === 0 ? "Standard Delivery (Free)" : "J&T Express (6000r)",
+    cart,
+    discountAmount,
+    total: cart.reduce((sum, item) => sum + item.price * item.quantity, 0) + selectedShippingPrice - discountAmount,
+  };
+
+  localStorage.setItem("lastOrder", JSON.stringify(order));
+  window.location.href = "indexinvoice.html";
+}
+
+    renderCheckoutItems();
+  </script>
+</body>
+</html>
